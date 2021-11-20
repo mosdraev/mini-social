@@ -7,13 +7,18 @@
 
             <form @submit.prevent="submit">
                 <div>
-                    <BreezeLabel for="name" value="Name" />
-                    <BreezeInput id="name" type="text" class="mt-1 block w-full" v-model="form.name" required autofocus autocomplete="name" />
+                    <BreezeLabel for="firstname" value="Firstname" />
+                    <BreezeInput id="firstname" type="text" class="mt-1 block w-full" v-model="form.firstname" required autofocus autocomplete="firstname" />
+                </div>
+
+                <div class="mt-4">
+                    <BreezeLabel for="lastname" value="Lastname" />
+                    <BreezeInput id="lastname" type="text" class="mt-1 block w-full" v-model="form.lastname" required autocomplete="lastname" />
                 </div>
 
                 <div class="mt-4">
                     <BreezeLabel for="email" value="Email" />
-                    <BreezeInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autocomplete="username" />
+                    <BreezeInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autocomplete="email" />
                 </div>
 
                 <div class="mt-4">
@@ -63,7 +68,8 @@ export default {
     data() {
         return {
             form: this.$inertia.form({
-                name: '',
+                firstname: '',
+                lastname: '',
                 email: '',
                 password: '',
                 password_confirmation: '',
