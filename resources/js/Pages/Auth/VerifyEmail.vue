@@ -9,15 +9,19 @@
         A new verification link has been sent to the email address you provided during registration.
     </div>
 
-    <form @submit.prevent="submit">
-        <div class="mt-4 flex items-center justify-between">
-            <BreezeButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Resend Verification Email
-            </BreezeButton>
+    <div class="flex h-screen">
+        <div class="auth-forms shadow-2xl">
+            <form @submit.prevent="submit">
+                <div class="mt-4 flex items-center justify-between">
+                    <BreezeButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                        Resend Verification Email
+                    </BreezeButton>
 
-            <Link :href="route('logout')" method="post" as="button" class="underline text-sm text-gray-600 hover:text-gray-900">Log Out</Link>
+                    <Link :href="route('logout')" method="post" as="button" class="underline text-sm text-gray-600 hover:text-gray-900">Log Out</Link>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </template>
 
 <script>

@@ -2,7 +2,7 @@
     <Head title="Log in" />
 
     <div class="flex h-screen">
-        <div class="login-form shadow-2xl">
+        <div class="auth-forms shadow-2xl">
             <BreezeValidationErrors class="mb-4" />
 
             <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
@@ -40,14 +40,6 @@
         </div>
     </div>
 </template>
-
-<style scoped>
-    .login-form {
-        width: 45%;
-        margin: auto;
-        padding: 2rem;
-    }
-</style>
 
 <script>
 import BreezeButton from '@/Components/Button.vue'

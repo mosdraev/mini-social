@@ -1,28 +1,38 @@
 <template>
-    <!-- NAVIGATION BLOCK -->
-    <div class="p-5 bg-gray-800">
-        <div class="navigation">
-            <div v-if="canLogin" class=" ">
-                <Link v-if="$page.props.auth.user" :href="route('dashboard')" class="bg-blue-600 p-2 text-sm">Dashboard</Link>
+    <div class="bg-gray-200">
+        <!-- NAVIGATION BLOCK -->
+        <div class="p-5 bg-gray-800">
+            <div class="navigation">
+                <div v-if="canLogin" class=" ">
+                    <Link v-if="$page.props.auth.user" :href="route('dashboard')" class="bg-blue-600 p-2 text-sm">Dashboard</Link>
 
-                <template v-else>
-                    <Link :href="route('login')" class="bg-blue-600 p-2 text-sm text-white">Log in</Link>
+                    <template v-else>
+                        <Link :href="route('login')" class="bg-blue-600 p-2 text-sm text-white">Log in</Link>
 
-                    <Link v-if="canRegister" :href="route('register')" class="bg-blue-600 p-2 ml-4 text-sm text-white">Register</Link>
-                </template>
+                        <Link v-if="canRegister" :href="route('register')" class="bg-blue-600 p-2 ml-4 text-sm text-white">Register</Link>
+                    </template>
+                </div>
             </div>
         </div>
+
+        <main>
+            <div class="main-content">
+                <slot />
+            </div>
+        </main>
+
+        <!-- footer maybe -->
     </div>
 
-    <main class="bg-gray-200">
-        <div class="main-content">
-            <slot />
-        </div>
-    </main>
-
-    <!-- footer maybe -->
-
 </template>
+
+<style>
+    .auth-forms {
+        width: 45%;
+        margin: auto;
+        padding: 2rem;
+    }
+</style>
 
 <style scoped>
     .navigation {
