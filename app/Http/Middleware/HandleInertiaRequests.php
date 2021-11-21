@@ -34,9 +34,15 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request)
     {
-        $user = $request->user()->only('id', 'email');
-        $profile = Profile::select('firstname', 'lastname')
-            ->where('user_id', $user['id'])->first()->toArray();
+        $user = null;
+        $profile = null;
+
+        if (!is_null($request->user()))
+        {
+            $user = $request->user()->only('id', 'email');
+            $profile = Profile::select('firstname', 'lastname')
+                ->where('user_id', $user['id'])->first()->toArray();
+        }
 
         return array_merge(parent::share($request), [
             'auth' => [
