@@ -1,18 +1,9 @@
 <template>
     <Head title="Home" />
 
-    <BreezeGuestLayout v-bind="$props">
+    <MainLayout v-bind="$props">
 
-        <div class="bg-gray-400 grid grid-cols-6">
-            <div class="col-span-4">
-                hello home page
-            </div>
-            <div class="">
-                right menu
-            </div>
-        </div>
-
-    </BreezeGuestLayout>
+    </MainLayout>
 </template>
 
 <style scoped>
@@ -21,14 +12,14 @@
 </style>
 
 <script>
-import BreezeGuestLayout from '@/Layouts/Guest.vue'
+import MainLayout from '@/Layouts/Authenticated.vue'
 import { Head, Link } from '@inertiajs/inertia-vue3';
 
 export default {
     components: {
       Head,
       Link,
-      BreezeGuestLayout,
+      MainLayout,
     },
     props: {
         canLogin: Boolean,

@@ -14,8 +14,10 @@
                             </div>
 
                             <!-- Navigation Links -->
+
+
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <BreezeNavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                                <BreezeNavLink v-if="$page.props.auth.user" :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </BreezeNavLink>
                             </div>
@@ -24,7 +26,7 @@
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
                             <!-- Settings Dropdown -->
                             <div class="ml-3 relative">
-                                <BreezeDropdown align="right" width="48">
+                                <BreezeDropdown v-if="$page.props.auth.user" align="right" width="48">
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">
                                             <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
@@ -42,6 +44,13 @@
                                         </BreezeDropdownLink>
                                     </template>
                                 </BreezeDropdown>
+
+                                <template v-else>
+                                    <div class="flex flex-row gap-3">
+                                        <BreezeNavLink :href="route('login')">Log in</BreezeNavLink>
+                                        <BreezeNavLink :href="route('register')">Register</BreezeNavLink>
+                                    </div>
+                                </template>
                             </div>
                         </div>
 
@@ -60,23 +69,32 @@
                 <!-- Responsive Navigation Menu -->
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
-                        <BreezeResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                        <BreezeResponsiveNavLink v-if="$page.props.auth.user" :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </BreezeResponsiveNavLink>
                     </div>
 
                     <!-- Responsive Settings Options -->
                     <div class="pt-4 pb-1 border-t border-gray-200">
-                        <div class="px-4">
-                            <div class="font-medium text-base text-gray-800">{{ $page.props.auth.profile.firstname + ' ' + $page.props.auth.profile.lastname }}</div>
-                            <div class="font-medium text-sm text-gray-500">{{ $page.props.auth.user.email }}</div>
-                        </div>
+                        <template v-if="$page.props.auth.user">
+                            <div class="px-4">
+                                <div class="font-medium text-base text-gray-800">{{ $page.props.auth.profile.firstname + ' ' + $page.props.auth.profile.lastname }}</div>
+                                <div class="font-medium text-sm text-gray-500">{{ $page.props.auth.user.email }}</div>
+                            </div>
 
-                        <div class="mt-3 space-y-1">
-                            <BreezeResponsiveNavLink :href="route('logout')" method="post" as="button">
-                                Log Out
-                            </BreezeResponsiveNavLink>
-                        </div>
+                            <div class="mt-3 space-y-1">
+                                <BreezeResponsiveNavLink :href="route('logout')" method="post" as="button">
+                                    Log Out
+                                </BreezeResponsiveNavLink>
+                            </div>
+                        </template>
+
+                        <template v-else>
+                            <div class="flex flex-row gap-3">
+                                <BreezeNavLink :href="route('login')">Log in</BreezeNavLink>
+                                <BreezeNavLink :href="route('register')">Register</BreezeNavLink>
+                            </div>
+                        </template>
                     </div>
                 </div>
             </nav>
@@ -95,6 +113,14 @@
         </div>
     </div>
 </template>
+
+<style>
+    .auth-forms {
+        width: 45%;
+        margin: auto;
+        padding: 2rem;
+    }
+</style>
 
 <script>
 import BreezeApplicationLogo from '@/Components/ApplicationLogo.vue'
@@ -118,6 +144,11 @@ export default {
         return {
             showingNavigationDropdown: false,
         }
+    },
+
+    props: {
+        canLogin: Boolean,
+        canRegister: Boolean,
     },
 }
 </script>
