@@ -29,13 +29,13 @@ Route::group(['middleware' => ['auth', 'verified']], function() {
     })->name('dashboard');
 
     Route::get('profile/{profile}', [ProfileController::class, 'show'])
-        ->name('viewProfile');
+        ->name('view.profile');
 
     Route::get('edit-profile/{profile}', [ProfileController::class, 'edit'])
-        ->name('editProfile');
+        ->name('edit.profile');
 
-    Route::post('update-profile', [ProfileController::class, 'update'])
-        ->name('updateProfile');
+    Route::put('update-profile/{profile}', [ProfileController::class, 'update'])
+        ->name('update.profile');
 });
 
 require __DIR__.'/auth.php';

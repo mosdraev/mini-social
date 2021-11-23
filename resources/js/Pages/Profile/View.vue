@@ -22,8 +22,10 @@
                         <div class="col-span-offset-2">
                             <Link
                                 class="mb-2 inline-flex items-center px-4 py-2 bg-blue-700 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-600 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:shadow-outline-blue transition ease-in-out duration-150"
-                                :href="route('viewProfile', $page.props.auth.user.id)">Edit Profile</Link>
-                            <Button :type="button">Change Photo</Button>
+                                :href="route('edit.profile', $page.props.auth.user.id)">
+                                Edit Profile
+                            </Link>
+                            <Button type="button">Change Photo</Button>
                         </div>
                         <div class="col-span-offset-3 col-span-5">
                             <div class="ml-9">

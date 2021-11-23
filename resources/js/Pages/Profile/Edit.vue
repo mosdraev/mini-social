@@ -22,7 +22,7 @@
                         <div class="col-span-offset-2">
                             <Link
                                 class="mb-2 inline-flex items-center px-4 py-2 bg-blue-700 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-600 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:shadow-outline-blue transition ease-in-out duration-150"
-                                :href="route('viewProfile', $page.props.auth.user.id)">Edit Profile</Link>
+                                :href="route('view.profile', $page.props.auth.user.id)">Edit Profile</Link>
                             <Button>Change Photo</Button>
                         </div>
                         <div class="col-span-offset-3 col-span-5">
@@ -51,7 +51,8 @@
                                     <div class="mt-4 flex flex-row-reverse">
                                         <Button :class="{ 'opacity-25': form.processing }" :disabled="form.processing"
                                             class="inline-flex items-center bg-blue-700 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-600 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:shadow-outline-blue transition ease-in-out duration-150"
-                                            >Save Profile</Button>
+                                        >Save Profile
+                                        </Button>
                                         <Button type="button" class="mr-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Cancel</Button>
                                     </div>
                                 </form>
@@ -65,19 +66,17 @@
 </template>
 
 <script>
-import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import Button from '@/Components/Button.vue'
 import Label from '@/Components/Label.vue'
 import Input from '@/Components/Input.vue'
 import InputError from '@/Components/InputError.vue'
-import { Head, Link } from '@inertiajs/inertia-vue3';
-import BreezeValidationErrors from '@/Components/ValidationErrors.vue'
+import { Head, Link } from '@inertiajs/inertia-vue3'
+import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 
 
 export default {
     components: {
         BreezeAuthenticatedLayout,
-        BreezeValidationErrors,
         Head,
         Button,
         Link,
@@ -111,7 +110,7 @@ export default {
             this.form.email = email.value;
             this.form.mobile_number = mobile_number.value;
 
-            this.form.post(this.route('updateProfile'));
+            this.form.put(this.route('update.profile', this.$page.props.auth.user.id));
         }
     }
 }
