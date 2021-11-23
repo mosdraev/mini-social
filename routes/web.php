@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -27,7 +28,14 @@ Route::group(['middleware' => ['auth', 'verified']], function() {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
+    Route::get('profile/{profile}', [ProfileController::class, 'show'])
+        ->name('viewProfile');
 
+    Route::get('edit-profile/{profile}', [ProfileController::class, 'edit'])
+        ->name('editProfile');
+
+    Route::post('update-profile', [ProfileController::class, 'update'])
+        ->name('updateProfile');
 });
 
 require __DIR__.'/auth.php';
