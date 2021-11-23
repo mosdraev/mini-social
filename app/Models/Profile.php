@@ -9,7 +9,20 @@ class Profile extends Model
 {
     use HasFactory;
 
+    /**
+     * Database table name
+     *
+     * @var string
+     */
     protected $table = 'profile';
+
+    /**
+     * @inheritdoc
+     */
+    public function getRouteKeyName()
+    {
+        return 'user_id';
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -30,18 +43,14 @@ class Profile extends Model
      *
      * @return object|boolean
      */
-    public function modify($user_id, $data)
+    public function modify($data)
     {
-        $user = User::where('id', $user_id)->first();
-        $profile = $this->where('user_id', $user_id)->first();
-
         $user_data = ['email' => $data['email']];
         unset($data['email']);
 
-        $profile->attributes = $data;
-        $user->attributes = $user_data;
+        $user = User::where('id', $this->user_id)->first();
 
-        return ($profile->update() && $user->update()) ? true : false;
+        return ($this->update($data) && $user->update($user_data)) ? true : false;
     }
 
     /**

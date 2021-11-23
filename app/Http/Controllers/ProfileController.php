@@ -6,7 +6,6 @@ use App\Http\Requests\Profile\UpdateProfileRequest;
 use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class ProfileController extends Controller
@@ -75,17 +74,15 @@ class ProfileController extends Controller
      * @param  \App\Models\Profile  $profile
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateProfileRequest $request)
+    public function update(UpdateProfileRequest $request, Profile $profile)
     {
         $data = $request->validated();
-        $user_id = Auth::user()->id;
 
-        $profile = new Profile();
-        $result = $profile->modify($user_id, $data);
+        $result = $profile->modify($data);
 
         if ($result === true)
         {
-            return redirect()->route('viewProfile', 2)
+            return redirect()->route('view.profile', $profile->user_id)
                 ->with('type', 'alert-success')
                 ->with('message', 'Successfully updated profile!');
         }
