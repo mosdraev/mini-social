@@ -31,9 +31,6 @@ Route::group(['middleware' => ['auth', 'verified']], function() {
     Route::get('profile/{profile}', [ProfileController::class, 'show'])
         ->name('view.profile');
 
-    Route::get('edit-profile/{profile}', [ProfileController::class, 'edit'])
-        ->name('edit.profile');
-
     Route::put('update-profile/{profile}', [ProfileController::class, 'update'])
         ->name('update.profile');
 });
