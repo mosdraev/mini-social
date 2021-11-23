@@ -33,6 +33,9 @@ Route::group(['middleware' => ['auth', 'verified']], function() {
 
     Route::put('update-profile/{profile}', [ProfileController::class, 'update'])
         ->name('update.profile');
+
+    Route::post('upload/{profile}', [ProfileController::class, 'uploadPhoto'])
+        ->name('upload.image');
 });
 
 require __DIR__.'/auth.php';

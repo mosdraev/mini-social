@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Profile\UpdateProfileRequest;
+use App\Http\Requests\Profile\UploadImageRequest;
 use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,35 +11,21 @@ use Inertia\Inertia;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+    use HasImageUpload;
 
     /**
-     * Show the form for creating a new resource.
+     * Upload the specified resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Profile $profile
      */
-    public function create()
+    public function uploadPhoto(UploadImageRequest $request, Profile $profile)
     {
-        //
-    }
+        $this->upload($request, $profile, 'profile');
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        return redirect()->route('view.profile', $profile->user_id)
+                ->with('type', 'alert-success')
+                ->with('message', 'Successfully uploded photo!');
     }
 
     /**
