@@ -37,10 +37,15 @@
     },
     "scripts": {
         "post-update-cmd": [
-            "@php artisan package:discover --ansi",
+            "npm install && npm run dev",
+            "@php artisan vendor:publish --tag=laravel-assets --ansi"
+        ],
+        "post-install-cmd": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php artisan key:generate --ansi",
-            "@php artisan vendor:publish --tag=laravel-assets --ansi"
+            "@php artisan storage:link",
+            "npm install && npm run dev",
+            "@php artisan package:discover --ansi"
         ]
     },
     "extra": {
