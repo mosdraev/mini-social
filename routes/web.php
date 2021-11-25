@@ -1,19 +1,9 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Route::get('/', function () {
     return Inertia::render('Home', [
@@ -36,6 +26,12 @@ Route::group(['middleware' => ['auth', 'verified']], function() {
 
     Route::post('upload/{profile}', [ProfileController::class, 'uploadPhoto'])
         ->name('upload.image');
+
+    Route::get('posts', [PostController::class, 'index'])
+        ->name('post.index');
+
+    Route::post('store', [PostController::class, 'store'])
+        ->name('post.store');
 });
 
 require __DIR__.'/auth.php';

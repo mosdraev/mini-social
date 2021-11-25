@@ -18,9 +18,8 @@
                     <div v-else class="p-6 bg-white border-b border-gray-200">
                         Update your profile here!
                     </div>
-
                     <div class="grid grid-cols-8 p-6">
-                        <div class="col-span-2">
+                        <div class="profile-photo-box col-span-2">
                             <template v-if="$page.props.profileData.photo">
                                 <Image :src="$page.props.profileData.photo" />
                             </template>
@@ -109,6 +108,15 @@
     </BreezeAuthenticatedLayout>
 </template>
 
+<style scoped>
+.profile-photo-box {
+    max-height: 250px;
+    height: auto;
+    max-width: 250px;
+    width: 100%;
+}
+</style>
+
 <script>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import Button from '@/Components/Button.vue'
@@ -172,7 +180,7 @@ export default {
             this.formUpload.image = this.selectedImage;
 
             this.formUpload.post(this.route('upload.image', this.$page.props.auth.user.id), {
-                onFinish: () => this.refs.fileInput.refs.input.value = null
+                onFinish: () => this.formUpload.image = null
             });
         }
     }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Profile\UpdateProfileRequest;
-use App\Http\Requests\Profile\UploadImageRequest;
+use App\Http\Requests\UploadImageRequest;
 use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,12 +16,12 @@ class ProfileController extends Controller
     /**
      * Upload the specified resource in storage.
      *
-     * @param Request $request
+     * @param UploadImageRequest $request
      * @param Profile $profile
      */
     public function uploadPhoto(UploadImageRequest $request, Profile $profile)
     {
-        $image = $this->upload($request, $profile, 'profile');
+        $image = $this->upload($request, 'profile');
 
         if ($image->wasRecentlyCreated)
         {
