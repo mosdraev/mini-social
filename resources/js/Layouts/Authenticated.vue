@@ -20,6 +20,9 @@
                                 <BreezeNavLink v-if="$page.props.auth.user" :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </BreezeNavLink>
+                                <BreezeNavLink v-if="$page.props.auth.user" :href="route('post.index')" :active="route().current('post.index')">
+                                    My Post
+                                </BreezeNavLink>
                             </div>
                         </div>
 

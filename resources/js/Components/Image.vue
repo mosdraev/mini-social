@@ -1,5 +1,5 @@
 <template>
-    <img :src="source" class="image-box">
+    <img :src="source" class="image_box">
 </template>
 
 <style scoped>
