@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Post\PostRequest;
 use App\Http\Requests\Profile\UploadImageRequest;
 use App\Models\Post;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -34,6 +35,28 @@ class PostController extends Controller
     public function create()
     {
         //
+    }
+
+    /**
+     * Modifies post visibility to private or public
+     *
+     * @param Post $post
+     * @param string $visibility public|private
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateVisibility(Post $post, $visibility)
+    {
+        $result = $post->update([
+            'visibility' => $visibility
+        ]);
+
+        if ($result)
+        {
+            return redirect(route('post.index'))
+                ->with('type', 'alert-success')
+                ->with('message', "Post is now $visibility.");
+        }
     }
 
     /**

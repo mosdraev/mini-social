@@ -57,10 +57,10 @@
                             </template>
 
                             <template #content>
-                                <DropdownLink >
+                                <DropdownLink :href="route('post.visibility', { post: post.id, visibility: 'public' })" method="post" as="button" preserve-scroll>
                                     Set to Public
                                 </DropdownLink>
-                                <DropdownLink >
+                                <DropdownLink :href="route('post.visibility', { post: post.id, visibility: 'private' })" method="post" as="button" preserve-scroll>
                                     Set to Private
                                 </DropdownLink>
                             </template>

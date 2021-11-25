@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Image;
+use Carbon\Carbon;
 
 class Post extends Model
 {
@@ -21,7 +22,7 @@ class Post extends Model
     ];
 
     /**
-     * Undocumented function
+     * Creates a post for a user and includes image reference when available.
      *
      * @return void
      */
@@ -44,5 +45,21 @@ class Post extends Model
         }
 
         return Post::create($data);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::createFromTimeStamp(strtotime($value))->diffForHumans();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUpdatedAtAttribute($value)
+    {
+        return Carbon::createFromTimeStamp(strtotime($value))->diffForHumans();
     }
 }
