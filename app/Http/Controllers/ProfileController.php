@@ -21,7 +21,12 @@ class ProfileController extends Controller
      */
     public function uploadPhoto(UploadImageRequest $request, Profile $profile)
     {
-        $this->upload($request, $profile, 'profile');
+        $image = $this->upload($request, $profile, 'profile');
+
+        if ($image->wasRecentlyCreated)
+        {
+            $profile->update(['photo' => $image->path]);
+        }
 
         return redirect()->route('view.profile', $profile->user_id)
                 ->with('type', 'alert-success')
