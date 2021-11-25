@@ -21,7 +21,19 @@
 
                     <div class="grid grid-cols-8 p-6">
                         <div class="col-span-2">
-                            <img class="" src="https://via.placeholder.com/250" />
+                            <template v-if="$page.props.profileData.photo">
+                                <Image :src="$page.props.profileData.photo" />
+                            </template>
+                            <template v-else>
+                                <img src="https://via.placeholder.com/250" />
+                            </template>
+
+                            <form @submit.prevent="submit" v-show="false">
+                                <Input
+                                    @change="onFileSelect"
+                                    ref="fileInput"
+                                    id="image" type="file" class="mt-1 block w-full" name="image" />
+                            </form>
                         </div>
                         <div class="col-span-offset-2">
                             <Button
@@ -31,7 +43,10 @@
                                 >
                                 Edit Profile
                             </Button>
-                            <Button type="button">Change Photo</Button>
+                            <Button
+                                type="button"
+                                @click="$refs.fileInput.$refs.input.click()"
+                            >Change Photo</Button>
                         </div>
 
                         <template v-if="!showUpdateForm">
@@ -77,7 +92,7 @@
                                             <InputError class="mt-1" :message="$page.props.errors.mobile_number" />
                                         </div>
                                         <div class="mt-4 flex flex-row-reverse">
-                                            <Button type="submit" :class="{ 'opacity-25': form.processing }" :disabled="form.processing"
+                                            <Button @click="updateProfile" type="button" :class="{ 'opacity-25': form.processing }" :disabled="form.processing"
                                                 class="inline-flex items-center bg-blue-700 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-600 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:shadow-outline-blue transition ease-in-out duration-150"
                                             >Save Profile
                                             </Button>
@@ -101,6 +116,7 @@ import { Head, Link } from '@inertiajs/inertia-vue3'
 import Label from '@/Components/Label.vue'
 import Input from '@/Components/Input.vue'
 import InputError from '@/Components/InputError.vue'
+import Image from '@/Components/Image.vue'
 
 export default {
     components: {
@@ -111,36 +127,52 @@ export default {
         Label,
         Input,
         InputError,
+        Image,
     },
 
     data() {
         return {
+            selectedImage: null,
             showUpdateForm: false,
             form: this.$inertia.form({
                 firstname: '',
                 lastname: '',
                 email: '',
                 mobile_number: '',
+            }),
+            formUpload: this.$inertia.form({
+                image: ''
             })
         }
     },
 
     methods: {
-        submit(event) {
+        updateProfile(event) {
             let {
                 firstname,
                 lastname,
                 email,
                 mobile_number
-            } = event.target.elements;
+            } = event.target.form.elements;
 
-            this.form.firstname = firstname.value;
-            this.form.lastname = lastname.value;
-            this.form.email = email.value;
-            this.form.mobile_number = mobile_number.value;
+            this.form.firstname = firstname.value ?? '';
+            this.form.lastname = lastname.value ?? '';
+            this.form.email = email.value ?? '';
+            this.form.mobile_number = mobile_number.value ?? '';
 
             this.form.put(this.route('update.profile', this.$page.props.auth.user.id), {
                 onFinish: () => this.showUpdateForm = false,
+            });
+        },
+        onFileSelect(event) {
+            this.selectedImage = event.target.files[0];
+            this.uploadImage()
+        },
+        uploadImage() {
+            this.formUpload.image = this.selectedImage;
+
+            this.formUpload.post(this.route('upload.image', this.$page.props.auth.user.id), {
+                onFinish: () => this.refs.fileInput.refs.input.value = null
             });
         }
     }
