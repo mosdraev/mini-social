@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Profile extends Model
+class Image extends Model
 {
     use HasFactory;
 
@@ -14,7 +14,7 @@ class Profile extends Model
      *
      * @var string
      */
-    protected $table = 'profile';
+    protected $table = 'image';
 
     /**
      * @inheritdoc
@@ -31,31 +31,14 @@ class Profile extends Model
      */
     protected $fillable = [
         'user_id',
-        'firstname',
-        'lastname',
-        'mobile_number',
-        'photo'
+        'type',
+        'path',
     ];
 
     protected $guarded = [];
 
     /**
-     * Function to update Profile and User models
-     *
-     * @return object|boolean
-     */
-    public function modify($data)
-    {
-        $user_data = ['email' => $data['email']];
-        unset($data['email']);
-
-        $user = User::where('id', $this->user_id)->first();
-
-        return ($this->update($data) && $user->update($user_data)) ? true : false;
-    }
-
-    /**
-     * DB Relational connection from Profile -> User model
+     * DB Relational connection from Image -> User model
      *
      * @return object
      */

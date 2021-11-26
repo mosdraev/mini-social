@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ProfileFactory extends Factory
+class PostFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -14,7 +14,10 @@ class ProfileFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'content' => $this->faker->paragraph(10),
+            'user_id' => 1,
+            'image_reference' => null,
+            'visibility' => 'public'
         ];
     }
 }
