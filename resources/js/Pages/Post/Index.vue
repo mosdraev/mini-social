@@ -66,7 +66,7 @@
                             </template>
                         </Dropdown>
                     </div>
-                    <div class="divide-y divide-gray-200">
+                    <div class="divide-y divide-gray-200 cursor-pointer" @click="generateViewPage(post)">
                         <template v-if="post.image_reference">
                             <Image :src="post.image_reference" />
                         </template>
@@ -139,6 +139,11 @@ export default {
                     this.createPostForm.image = null
                 }
             })
+        },
+        generateViewPage(data) {
+            if (data.image_reference) {
+                window.open(this.route('post.view', { post: data.id }), '_self');
+            }
         }
     }
 }

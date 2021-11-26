@@ -30,6 +30,9 @@ Route::group(['middleware' => ['auth', 'verified']], function() {
     Route::get('posts', [PostController::class, 'index'])
         ->name('post.index');
 
+    Route::get('post/{post}', [PostController::class, 'show'])
+        ->name('post.view');
+
     Route::post('store', [PostController::class, 'store'])
         ->name('post.store');
 
