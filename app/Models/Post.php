@@ -6,11 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Image;
-use Carbon\Carbon;
 
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory, HasReadableTimestampTrait;
 
     protected $table = 'post';
 
@@ -48,18 +47,22 @@ class Post extends Model
     }
 
     /**
-     * @inheritDoc
+     * DB Relational connection from Post -> Comment model
+     *
+     * @return object
      */
-    public function getCreatedAtAttribute($value)
+    public function comment()
     {
-        return Carbon::createFromTimeStamp(strtotime($value))->diffForHumans();
+        return $this->hasMany(Comment::class);
     }
 
     /**
-     * @inheritDoc
+     * DB Relational connection from Post -> Like model
+     *
+     * @return object
      */
-    public function getUpdatedAtAttribute($value)
+    public function like()
     {
-        return Carbon::createFromTimeStamp(strtotime($value))->diffForHumans();
+        return $this->hasMany(Like::class);
     }
 }

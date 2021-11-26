@@ -5,24 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Image extends Model
+class Like extends Model
 {
-    use HasFactory;
+    use HasFactory, HasReadableTimestampTrait;
 
     /**
      * Database table name
      *
      * @var string
      */
-    protected $table = 'image';
-
-    /**
-     * @inheritdoc
-     */
-    public function getRouteKeyName()
-    {
-        return 'user_id';
-    }
+    protected $table = 'like';
 
     /**
      * The attributes that are mass assignable.
@@ -30,20 +22,19 @@ class Image extends Model
      * @var string[]
      */
     protected $fillable = [
-        'user_id',
-        'type',
-        'path',
+        'post_id',
+        'count',
     ];
 
     protected $guarded = [];
 
     /**
-     * DB Relational connection from Image -> User model
+     * DB Relational connection from Like -> Post model
      *
      * @return object
      */
-    public function user()
+    public function post()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Post::class);
     }
 }

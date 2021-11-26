@@ -72,6 +72,26 @@ class User extends Authenticatable
      */
     public function profile()
     {
-        return $this->hasOne('profile');
+        return $this->hasOne(Profile::class);
+    }
+
+    /**
+     * DB Relational connection from User -> Image model
+     *
+     * @return object
+     */
+    public function image()
+    {
+        return $this->hasMany(Image::class);
+    }
+
+    /**
+     * DB Relational connection from User -> Comment model
+     *
+     * @return object
+     */
+    public function comment()
+    {
+        return $this->hasMany(Comment::class, 'user_id');
     }
 }
