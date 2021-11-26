@@ -7,7 +7,7 @@ use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-trait HasImageUpload
+trait HasImageUploadTrait
 {
      /**
       * Uploads a `profile` or `post` image that will be connected to an

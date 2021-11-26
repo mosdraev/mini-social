@@ -11,7 +11,7 @@ use Inertia\Inertia;
 
 class ProfileController extends Controller
 {
-    use HasImageUpload;
+    use HasImageUploadTrait;
 
     /**
      * Upload the specified resource in storage.

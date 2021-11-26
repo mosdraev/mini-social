@@ -3,15 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Post\PostRequest;
-use App\Http\Requests\Profile\UploadImageRequest;
 use App\Models\Post;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class PostController extends Controller
 {
-    use HasImageUpload;
+    use HasImageUploadTrait;
 
     /**
      * Display a listing of the resource.

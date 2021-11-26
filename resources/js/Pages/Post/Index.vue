@@ -40,7 +40,7 @@
         </div>
         <div v-for="(post) in $page.props.posts" :key="post.id">
             <div class="relative py-3 sm:max-w-4xl sm:mx-auto">
-                <div class="relative pb-10 px-16 pt-4 bg-white shadow-lg rounded bg-clip-padding bg-opacity-60 border border-gray-200">
+                <div class="relative px-16 pb-4 pt-4 bg-white shadow-lg rounded bg-clip-padding bg-opacity-60 border border-gray-200">
                     <div class="pb-3 flex justify-between">
                         <div class="flex justify-content items-center">
                             <img src="https://via.placeholder.com/40" class="rounded-full" />
@@ -72,6 +72,21 @@
                         </template>
                         <div class="py-2 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
                             {{ post.content }}
+                        </div>
+                    </div>
+                    <div class="flex flex-row flex flex-row gap-10 py-4">
+                        <span>Likes</span>
+                        <span>Comments</span>
+                    </div>
+                    <div class="bg-clip-padding border-t border-gray-200">
+
+                        <div class="flex justify-between mt-3">
+                            <div class="px-20">
+                                <button type="button">Like</button>
+                            </div>
+                            <div class="px-20">
+                                <button type="button">Comment</button>
+                            </div>
                         </div>
                     </div>
                 </div>
