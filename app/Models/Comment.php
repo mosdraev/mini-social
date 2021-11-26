@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Comment extends Model
 {
@@ -28,6 +29,19 @@ class Comment extends Model
     ];
 
     protected $guarded = [];
+
+    /**
+     * Add a new comment to a related post data
+     *
+     * @return boolean
+     */
+    public function add($data, Post $post)
+    {
+        $data['user_id'] = Auth::user()->id;
+        $data['post_id'] = $post->id;
+
+        return $this->create($data);
+    }
 
     /**
      * DB Relational connection from Comment -> User model

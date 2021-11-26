@@ -40,7 +40,7 @@
         </div>
         <div v-for="(post) in $page.props.posts" :key="post.id">
             <div class="relative py-3 sm:max-w-4xl sm:mx-auto">
-                <div class="relative px-16 pb-4 pt-4 bg-white shadow-lg rounded bg-clip-padding bg-opacity-60 border border-gray-200">
+                <div class="relative px-16 pt-4 bg-white shadow-lg rounded bg-clip-padding bg-opacity-60 border border-gray-200">
                     <div class="pb-3 flex justify-between">
                         <div class="flex justify-content items-center">
                             <img src="https://via.placeholder.com/40" class="rounded-full" />
@@ -74,18 +74,44 @@
                             {{ post.content }}
                         </div>
                     </div>
-                    <div class="flex flex-row flex flex-row gap-10 py-4">
-                        <span>Likes</span>
-                        <span>Comments</span>
+                    <div class="flex flex-row justify-between py-4">
+                        <span class="text-sm"><span>0</span> Likes</span>
+                        <span class="text-sm"><span>{{ post.comment.length }}</span> Comments</span>
                     </div>
-                    <div class="bg-clip-padding border-t border-gray-200">
-
-                        <div class="flex justify-between mt-3">
+                    <div class="bg-clip-padding border-t border-b border-gray-200">
+                        <div class="flex justify-between my-3">
                             <div class="px-20">
                                 <button type="button">Like</button>
                             </div>
                             <div class="px-20">
-                                <button type="button">Comment</button>
+                                <button type="button" @click="onDisplayCommentBox(post.id)">Comment</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="displayCommentBox === post.id" class="mt-2 mb-4">
+                        <form @submit.prevent>
+                            <Input
+                                :id="`commentBox${post.id}`"
+                                type="text"
+                                class="mt-1 block w-full"
+                                name="content"
+                                v-model="createCommentForm.content"
+                                @keyup.enter="createComment"
+                                autofocus />
+                            <InputError class="mt-1" :message="$page.props.errors.content" />
+                        </form>
+                    </div>
+                    <div class="pb-4">
+                        <div class="flex my-2" v-for="(comment) in post.comment" :key="comment.id">
+                            <div class="flex justify-content items-center">
+                                <img src="https://via.placeholder.com/35" class="rounded-full rounded-full mb-auto mt-1" />
+                                <div>
+                                    <div class="ml-3 text-sm py-2 px-4 rounded rounded-md bg-gray-100">
+                                        <p class="mb-0">{{ $page.props.auth.user.firstname + ' ' + $page.props.auth.user.lastname }}</p>
+                                        <p>{{ comment.content }}</p>
+                                    </div>
+                                    <p class="text-xs ml-4 py-2">{{ comment.created_at }}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -121,9 +147,13 @@ export default {
 
     data() {
         return {
+            displayCommentBox: false,
             createPostForm: this.$inertia.form({
                 content: '',
                 image: null
+            }),
+            createCommentForm: this.$inertia.form({
+                content: ''
             })
         }
     },
@@ -137,6 +167,18 @@ export default {
                 onFinish: () => {
                     this.createPostForm.content = ''
                     this.createPostForm.image = null
+                }
+            })
+        },
+        onDisplayCommentBox(data) {
+            this.displayCommentBox = data
+        },
+        createComment() {
+            this.createCommentForm.post(this.route('post.comment.store', { post: this.displayCommentBox }), {
+                preserveScroll: true,
+                onFinish: () => {
+                    this.displayCommentBox = false
+                    this.createCommentForm.content = ''
                 }
             })
         },

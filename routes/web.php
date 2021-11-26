@@ -36,6 +36,9 @@ Route::group(['middleware' => ['auth', 'verified']], function() {
     Route::post('store', [PostController::class, 'store'])
         ->name('post.store');
 
+    Route::post('storeComment/{post}', [PostController::class, 'storeComment'])
+        ->name('post.comment.store');
+
     Route::post('visibility/{post}/{visibility}', [PostController::class, 'updateVisibility'])
         ->name('post.visibility');
 });

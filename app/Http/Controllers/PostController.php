@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Post\CommentRequest;
 use App\Http\Requests\Post\PostRequest;
+use App\Models\Comment;
 use App\Models\Post;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -18,7 +21,10 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::where('user_id', Auth::user()->id)->orderBy('id', 'DESC')->get();
+        $current_user = Auth::user();
+        $posts = Post::where('user_id', $current_user->id)
+            ->with('comment')
+            ->orderBy('id', 'DESC')->get();
 
         return Inertia::render('Post/Index', [
             'posts' => $posts
@@ -97,6 +103,26 @@ class PostController extends Controller
         return Inertia::render('Post/View', [
             'post' => $post
         ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @param Post $post
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function storeComment(CommentRequest $request, Post $post)
+    {
+        $data = $request->validated();
+
+        $comment = new Comment();
+        $comment->add($data, $post);
+
+        return back()
+                ->with('type', 'alert-success')
+                ->with('message', 'post is now published.');
     }
 
     /**
