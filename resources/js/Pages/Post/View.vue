@@ -14,7 +14,7 @@
                     <div class="flex justify-content items-center">
                         <img src="https://via.placeholder.com/40" class="rounded-full" />
                         <div class="ml-3 text-sm">
-                            <p class="mb-0">{{ $page.props.auth.profile.firstname + ' ' + $page.props.auth.profile.lastname }}</p>
+                            <p class="mb-0">{{ $page.props.auth.user.firstname + ' ' + $page.props.auth.user.lastname }}</p>
                             <p class="mb-0">{{ $page.props.post.created_at }}</p>
                         </div>
                     </div>

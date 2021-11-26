@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Profile;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -34,20 +33,19 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request)
     {
-        $user = null;
-        $profile = null;
+        $authenticated_user = null;
 
-        if (!is_null($request->user()))
+        if ($request->user())
         {
             $user = $request->user()->only('id', 'email');
-            $profile = Profile::select('firstname', 'lastname')
-                ->where('user_id', $user['id'])->first()->toArray();
+            $profile = $request->user()->profile->only('firstname', 'lastname');
+
+            $authenticated_user = array_merge($user, $profile);
         }
 
         return array_merge(parent::share($request), [
             'auth' => [
-                'user' => $user,
-                'profile' => $profile
+                'user' => $authenticated_user,
             ],
             'flash' => [
                 'content' => [
