@@ -35,7 +35,7 @@ class Comment extends Model
      *
      * @return boolean
      */
-    public function add($data, Post $post)
+    public function makeComment($data, Post $post)
     {
         $data['user_id'] = Auth::user()->id;
         $data['post_id'] = $post->id;

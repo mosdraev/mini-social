@@ -94,4 +94,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Comment::class, 'user_id');
     }
+
+    /**
+     * DB Relational connection from User -> Comment model
+     *
+     * @return object
+     */
+    public function like()
+    {
+        return $this->hasMany(User::class, 'user_id');
+    }
 }

@@ -39,6 +39,9 @@ Route::group(['middleware' => ['auth', 'verified']], function() {
     Route::post('storeComment/{post}', [PostController::class, 'storeComment'])
         ->name('post.comment.store');
 
+    Route::post('storeLike/{post}', [PostController::class, 'storeLike'])
+        ->name('post.like.store');
+
     Route::post('visibility/{post}/{visibility}', [PostController::class, 'updateVisibility'])
         ->name('post.visibility');
 });

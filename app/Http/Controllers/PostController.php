@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Post\CommentRequest;
 use App\Http\Requests\Post\PostRequest;
 use App\Models\Comment;
+use App\Models\Like;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +25,7 @@ class PostController extends Controller
         $current_user = Auth::user();
         $posts = Post::where('user_id', $current_user->id)
             ->with('comment')
-            ->orderBy('id', 'DESC')->get();
+            ->with('like')->orderBy('id', 'DESC')->get();
 
         return Inertia::render('Post/Index', [
             'posts' => $posts
@@ -118,11 +119,27 @@ class PostController extends Controller
         $data = $request->validated();
 
         $comment = new Comment();
-        $comment->add($data, $post);
+        $comment->makeComment($data, $post);
 
         return back()
                 ->with('type', 'alert-success')
                 ->with('message', 'post is now published.');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @param Post $post
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function storeLike(Request $request, Post $post)
+    {
+        $like = new Like();
+        $like->likeOrUnlike($request, $post);
+
+        return back();
     }
 
     /**

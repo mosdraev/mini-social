@@ -75,13 +75,19 @@
                         </div>
                     </div>
                     <div class="flex flex-row justify-between py-4">
-                        <span class="text-sm"><span>0</span> Likes</span>
-                        <span class="text-sm"><span>{{ post.comment.length }}</span> Comments</span>
+                        <span v-if="post.like.length > 0" class="text-sm"><span>{{ post.like.length }}</span> Likes</span>
+                        <span v-if="post.comment.length > 0" class="text-sm"><span>{{ post.comment.length }}</span> Comments</span>
                     </div>
                     <div class="bg-clip-padding border-t border-b border-gray-200">
                         <div class="flex justify-between my-3">
                             <div class="px-20">
-                                <button type="button">Like</button>
+                                <button
+                                    v-if="post.like.length > 0 && post.like.user_id === $page.props.auth.id"
+                                    type="button"
+                                    class="text-blue-600"
+                                    @click="onLikePost(post.id)">Unlike</button>
+
+                                <button v-else type="button" @click="onLikePost(post.id)">Like</button>
                             </div>
                             <div class="px-20">
                                 <button type="button" @click="onDisplayCommentBox(post.id)">Comment</button>
@@ -172,6 +178,14 @@ export default {
         },
         onDisplayCommentBox(data) {
             this.displayCommentBox = data
+        },
+        onLikePost(id) {
+            let form = this.$inertia.form({
+                count: 1
+            });
+            form.post(this.route('post.like.store', { post: id }), {
+                preserveScroll: true
+            })
         },
         createComment() {
             this.createCommentForm.post(this.route('post.comment.store', { post: this.displayCommentBox }), {

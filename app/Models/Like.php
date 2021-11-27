@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Like extends Model
 {
@@ -23,10 +24,37 @@ class Like extends Model
      */
     protected $fillable = [
         'post_id',
-        'count',
+        'user_id',
     ];
 
     protected $guarded = [];
+
+    /**
+     * Add a new like to a related post data
+     *
+     * @return boolean
+     */
+    public function likeOrUnlike($data, Post $post)
+    {
+        $current_user = Auth::user();
+
+        $likeInstance = $this->where([
+            'post_id' => $post->id,
+            'user_id' => $current_user->id
+        ])->first();
+
+        if ($likeInstance && $likeInstance->exists)
+        {
+            return $likeInstance->delete();
+        }
+        else
+        {
+            return $this->create([
+                'post_id' => $post->id,
+                'user_id' => Auth::user()->id
+            ]);
+        }
+    }
 
     /**
      * DB Relational connection from Like -> Post model
@@ -36,5 +64,15 @@ class Like extends Model
     public function post()
     {
         return $this->belongsTo(Post::class);
+    }
+
+    /**
+     * DB Relational connection from Like -> User model
+     *
+     * @return object
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
