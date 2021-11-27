@@ -45,11 +45,11 @@
                         <div class="flex justify-content items-center">
                             <img src="https://via.placeholder.com/40" class="rounded-full" />
                             <div class="ml-3 text-sm">
-                                <p class="mb-0">{{ $page.props.auth.user.firstname + ' ' + $page.props.auth.user.lastname }}</p>
+                                <p class="mb-0">{{ post.byProfileName }}</p>
                                 <p class="mb-0">{{ post.created_at }}</p>
                             </div>
                         </div>
-                        <Dropdown align="right" width="48">
+                        <Dropdown v-if="post.user_id === $page.props.auth.user.id" align="right" width="48">
                             <template #trigger>
                                 <button type="button" class="mt-2">
                                     <EllipsisIcon />
@@ -75,14 +75,14 @@
                         </div>
                     </div>
                     <div class="flex flex-row justify-between py-4">
-                        <span v-if="post.like.length > 0" class="text-sm"><span>{{ post.like.length }}</span> Likes</span>
+                        <span v-if="post.likes > 0" class="text-sm"><span>{{ post.likes }}</span> Likes</span>
                         <span v-if="post.comment.length > 0" class="text-sm"><span>{{ post.comment.length }}</span> Comments</span>
                     </div>
                     <div class="bg-clip-padding border-t border-b border-gray-200">
                         <div class="flex justify-between my-3">
                             <div class="px-20">
                                 <button
-                                    v-if="post.like.length > 0 && post.like.user_id === $page.props.auth.id"
+                                    v-if="post.likedByCurrentUser !== null && post.likedByCurrentUser === $page.props.auth.user.id"
                                     type="button"
                                     class="text-blue-600"
                                     @click="onLikePost(post.id)">Unlike</button>
@@ -102,7 +102,7 @@
                                 class="mt-1 block w-full"
                                 name="content"
                                 v-model="createCommentForm.content"
-                                @keyup.enter="createComment"
+                                @keyup.enter="createComment(post.id)"
                                 autofocus />
                             <InputError class="mt-1" :message="$page.props.errors.content" />
                         </form>
@@ -113,7 +113,7 @@
                                 <img src="https://via.placeholder.com/35" class="rounded-full rounded-full mb-auto mt-1" />
                                 <div>
                                     <div class="ml-3 text-sm py-2 px-4 rounded rounded-md bg-gray-100">
-                                        <p class="mb-0">{{ $page.props.auth.user.firstname + ' ' + $page.props.auth.user.lastname }}</p>
+                                        <p class="mb-0">{{ comment.byProfileName }}</p>
                                         <p>{{ comment.content }}</p>
                                     </div>
                                     <p class="text-xs ml-4 py-2">{{ comment.created_at }}</p>
@@ -180,15 +180,12 @@ export default {
             this.displayCommentBox = data
         },
         onLikePost(id) {
-            let form = this.$inertia.form({
-                count: 1
-            });
-            form.post(this.route('post.like.store', { post: id }), {
+            this.$inertia.form().post(this.route('post.like.store', { post: id }), {
                 preserveScroll: true
             })
         },
-        createComment() {
-            this.createCommentForm.post(this.route('post.comment.store', { post: this.displayCommentBox }), {
+        createComment(id) {
+            this.createCommentForm.post(this.route('post.comment.store', { post: id }), {
                 preserveScroll: true,
                 onFinish: () => {
                     this.displayCommentBox = false

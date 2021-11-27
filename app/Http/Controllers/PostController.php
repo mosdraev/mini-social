@@ -7,6 +7,7 @@ use App\Http\Requests\Post\PostRequest;
 use App\Models\Comment;
 use App\Models\Like;
 use App\Models\Post;
+use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -22,10 +23,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $current_user = Auth::user();
-        $posts = Post::where('user_id', $current_user->id)
-            ->with('comment')
-            ->with('like')->orderBy('id', 'DESC')->get();
+        $posts = Post::getPosts();
 
         return Inertia::render('Post/Index', [
             'posts' => $posts

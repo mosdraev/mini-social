@@ -47,6 +47,39 @@ class Post extends Model
     }
 
     /**
+     * Returns all posts with specified queries and filters
+     *
+     * @return void|array
+     */
+    public static function getPosts()
+    {
+        $current_user = Auth::user();
+        $name_condition = "CONCAT_WS(' ', firstname, lastname) AS name";
+
+        return static::addSelect([
+            'likes' => Like::selectRaw('count(*) as total')
+                ->whereColumn('post_id', 'post.id')
+        ])
+        ->addSelect([
+            'likedByCurrentUser' => Like::select('user_id')
+                ->whereColumn('post_id', 'post.id')
+                ->where('user_id', '=', $current_user->id)
+        ])
+        ->addSelect([
+            'byProfileName' => Profile::selectRaw($name_condition)
+                ->whereColumn('user_id', 'post.user_id')
+        ])
+        ->with([
+            'comment' => function($comment) use ($name_condition) {
+                $comment->addSelect([
+                    'byProfileName' => Profile::selectRaw($name_condition)
+                        ->whereColumn('user_id', 'comment.user_id')
+                ]);
+            },
+        ])->orderBy('id', 'DESC')->get()->toArray();
+    }
+
+    /**
      * DB Relational connection from Post -> Comment model
      *
      * @return object
