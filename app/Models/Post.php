@@ -51,6 +51,16 @@ class Post extends Model
      *
      * @return object
      */
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    /**
+     * DB Relational connection from Post -> Comment model
+     *
+     * @return object
+     */
     public function comment()
     {
         return $this->hasMany(Comment::class)->orderBy('created_at', 'DESC');

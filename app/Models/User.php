@@ -86,6 +86,16 @@ class User extends Authenticatable
     }
 
     /**
+     * DB Relational connection from User -> Post model
+     *
+     * @return object
+     */
+    public function post()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    /**
      * DB Relational connection from User -> Comment model
      *
      * @return object
