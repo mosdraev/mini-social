@@ -7,9 +7,7 @@ use App\Http\Requests\Post\PostRequest;
 use App\Models\Comment;
 use App\Models\Like;
 use App\Models\Post;
-use App\Models\Profile;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class PostController extends Controller
@@ -28,16 +26,6 @@ class PostController extends Controller
         return Inertia::render('Post/Index', [
             'posts' => $posts
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -138,17 +126,6 @@ class PostController extends Controller
         $like->likeOrUnlike($request, $post);
 
         return back();
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Post $post)
-    {
-        //
     }
 
     /**

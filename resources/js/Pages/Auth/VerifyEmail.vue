@@ -26,11 +26,11 @@
 
 <script>
 import BreezeButton from '@/Components/Button.vue'
-import BreezeGuestLayout from '@/Layouts/Guest.vue'
+import MainLayout from '@/Layouts/Authenticated.vue'
 import { Head, Link } from '@inertiajs/inertia-vue3';
 
 export default {
-    layout: BreezeGuestLayout,
+    layout: MainLayout,
 
     components: {
         BreezeButton,

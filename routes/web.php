@@ -3,17 +3,12 @@
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::get('/', function () {
     return redirect(route('login'));
 });
 
 Route::group(['middleware' => ['auth', 'verified']], function() {
-
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
 
     Route::get('profile/{profile}', [ProfileController::class, 'show'])
         ->name('view.profile');

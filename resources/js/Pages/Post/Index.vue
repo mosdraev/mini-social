@@ -1,7 +1,7 @@
 <template>
     <Head title="Profile" />
 
-    <BreezeAuthenticatedLayout>
+    <MainLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 My posts
@@ -124,10 +124,10 @@
                 </div>
             </div>
         </div>
-    </BreezeAuthenticatedLayout>
+    </MainLayout>
 </template>
 <script>
-import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
+import MainLayout from '@/Layouts/Authenticated.vue'
 import Button from '@/Components/Button.vue'
 import { Head, Link } from '@inertiajs/inertia-vue3'
 import InputError from '@/Components/InputError.vue'
@@ -139,7 +139,7 @@ import DropdownLink from '@/Components/DropdownLink.vue'
 
 export default {
     components: {
-        BreezeAuthenticatedLayout,
+        MainLayout,
         Dropdown,
         DropdownLink,
         Head,

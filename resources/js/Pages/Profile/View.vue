@@ -1,7 +1,7 @@
 <template>
     <Head title="Profile" />
 
-    <BreezeAuthenticatedLayout>
+    <MainLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Profile
@@ -105,7 +105,7 @@
                 </div>
             </div>
         </div>
-    </BreezeAuthenticatedLayout>
+    </MainLayout>
 </template>
 
 <style scoped>
@@ -118,7 +118,7 @@
 </style>
 
 <script>
-import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
+import MainLayout from '@/Layouts/Authenticated.vue'
 import Button from '@/Components/Button.vue'
 import { Head, Link } from '@inertiajs/inertia-vue3'
 import Label from '@/Components/Label.vue'
@@ -128,7 +128,7 @@ import Image from '@/Components/Image.vue'
 
 export default {
     components: {
-        BreezeAuthenticatedLayout,
+        MainLayout,
         Head,
         Button,
         Link,
