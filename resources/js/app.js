@@ -10,10 +10,14 @@ createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => require(`./Pages/${name}.vue`),
     setup({ el, app, props, plugin }) {
-        return createApp({ render: () => h(app, props) })
+        const socialApp = createApp({ render: () => h(app, props) })
             .use(plugin)
-            .mixin({ methods: { route } })
-            .mount(el);
+            .mixin({ methods: { route } });
+
+            socialApp.config.globalProperties.$echo = window.Echo;
+            socialApp.mount(el);
+
+        return socialApp;
     },
 });
 

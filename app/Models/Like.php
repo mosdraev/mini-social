@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\PostNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -49,10 +50,21 @@ class Like extends Model
         }
         else
         {
-            return $this->create([
+            $like = $this->create([
                 'post_id' => $post->id,
                 'user_id' => Auth::user()->id
             ]);
+
+            if ($like->wasRecentlyCreated)
+            {
+                $toBeNotified = $post->user;
+                $notifier = $current_user;
+
+                $notification = new PostNotification(PostNotification::LIKE_NOTIFICATION, $notifier, $post);
+                $toBeNotified->notify($notification);
+
+                return true;
+            }
         }
     }
 

@@ -137,6 +137,15 @@ export default {
         }
     },
 
+    mounted() {
+        if (this.$page.props.auth.user) {
+            this.$echo.private('App.Models.User.' + this.$page.props.auth.user.id)
+                .notification((notification) => {
+                    console.log(notification.message);
+                });
+        }
+    },
+
     props: {
         canLogin: Boolean,
         canRegister: Boolean,
