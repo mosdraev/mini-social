@@ -60,8 +60,11 @@ class Like extends Model
                 $toBeNotified = $post->user;
                 $notifier = $current_user;
 
-                $notification = new PostNotification(PostNotification::LIKE_NOTIFICATION, $notifier, $post);
-                $toBeNotified->notify($notification);
+                if ($notifier->id !== $toBeNotified->id)
+                {
+                    $notification = new PostNotification(PostNotification::LIKE_NOTIFICATION, $notifier, $post);
+                    $toBeNotified->notify($notification);
+                }
 
                 return true;
             }

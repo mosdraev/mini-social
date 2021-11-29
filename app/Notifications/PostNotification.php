@@ -26,34 +26,58 @@ class PostNotification extends Notification implements ShouldBroadcast
         $this->generateAMessage();
     }
 
+    /**
+     * Generates a post notification message
+     *
+     * @return void
+     */
     private function generateAMessage()
     {
         $reference = $this->reference->content;
+        $profile   = $this->notifier->profile;
+        $this->message = "$profile->firstname $profile->lastname ";
 
         if ($this->type === self::LIKE_NOTIFICATION)
         {
-            $this->message = "liked your post, $reference";
+            $this->message .= "liked your post, $reference";
         }
 
         if ($this->type === self::COMMENT_NOTIFICATION)
         {
-            $this->message = "commented your post, $reference";
+            $this->message .= "commented your post, $reference";
         }
     }
 
     public function via($notifiable): array
     {
-        return ['broadcast'];
+        return ['broadcast', 'database'];
     }
 
+    /**
+     * Broadcast notification to a websocket connection
+     *
+     * @param object $notifiable
+     *
+     * @return BroadcastMessage
+     */
     public function toBroadcast($notifiable): BroadcastMessage
     {
-        $profile  = $this->notifier->profile;
-        $fullname = "$profile->firstname $profile->lastname";
-        $message  = "$fullname $this->message";
-
         return new BroadcastMessage([
-            'message' => substr($message, 0, 100) . '...'
+            'message' => substr($this->message, 0, 100) . '...'
         ]);
+    }
+
+    /**
+     * Save notification to the database
+     *
+     * @param object $notifiable
+     *
+     * @return array
+     */
+    public function toDatabase($notifiable)
+    {
+        return [
+            'message' => substr($this->message, 0, 100) . '...'
+        ];
     }
 }

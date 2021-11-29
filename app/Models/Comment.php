@@ -46,8 +46,11 @@ class Comment extends Model
             $toBeNotified = $post->user;
             $notifier = Auth::user();
 
-            $notification = new PostNotification(PostNotification::COMMENT_NOTIFICATION, $notifier, $post);
-            $toBeNotified->notify($notification);
+            if ($notifier->id !== $toBeNotified->id)
+            {
+                $notification = new PostNotification(PostNotification::COMMENT_NOTIFICATION, $notifier, $post);
+                $toBeNotified->notify($notification);
+            }
         }
 
         return true;

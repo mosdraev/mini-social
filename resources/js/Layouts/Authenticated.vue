@@ -16,18 +16,20 @@
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
                             <!-- Settings Dropdown -->
-                            <div v-if="this.notificationCount > 0" class="cursor-pointer flex">
-                                <span class="bg-red-600 rounded text-white text-xs z-10 ml-3 mt-2">{{ this.notificationCount }}</span>
-                                <div class="absolute mt-1">
-                                    <BellIcon />
+                            <template v-if="$page.props.auth.user">
+                                <div v-if="this.notificationCount > 0" class="cursor-pointer flex">
+                                    <span class="bg-red-600 rounded text-white text-xs z-10 ml-3 mt-2">{{ this.notificationCount }}</span>
+                                    <div class="absolute mt-1">
+                                        <BellIcon />
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div v-else class="cursor-pointer">
-                                <div class="mt-1">
-                                    <BellIcon />
+                                <div v-else class="cursor-pointer">
+                                    <div class="mt-1">
+                                        <BellIcon />
+                                    </div>
                                 </div>
-                            </div>
+                            </template>
                             <div class="ml-3 relative">
                                 <BreezeDropdown v-if="$page.props.auth.user" align="right" width="48">
                                     <template #trigger>
@@ -164,6 +166,8 @@ export default {
                     console.log(notification.message);
                 });
         }
+
+        this.notificationCount = this.$page.props.notifications
 
         // Close all opened toast after 3000ms
         setTimeout(this.$toast.clear, 3000)
