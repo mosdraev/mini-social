@@ -16,6 +16,18 @@
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
                             <!-- Settings Dropdown -->
+                            <div v-if="this.notificationCount > 0" class="cursor-pointer flex">
+                                <span class="bg-red-600 rounded text-white text-xs z-10 ml-3 mt-2">{{ this.notificationCount }}</span>
+                                <div class="absolute mt-1">
+                                    <BellIcon />
+                                </div>
+                            </div>
+
+                            <div v-else class="cursor-pointer">
+                                <div class="mt-1">
+                                    <BellIcon />
+                                </div>
+                            </div>
                             <div class="ml-3 relative">
                                 <BreezeDropdown v-if="$page.props.auth.user" align="right" width="48">
                                     <template #trigger>
@@ -115,6 +127,7 @@
 
 <script>
 import BreezeApplicationLogo from '@/Components/ApplicationLogo.vue'
+import BellIcon from '@/Components/BellIcon.vue'
 import BreezeDropdown from '@/Components/Dropdown.vue'
 import BreezeDropdownLink from '@/Components/DropdownLink.vue'
 import BreezeNavLink from '@/Components/NavLink.vue'
@@ -129,11 +142,13 @@ export default {
         BreezeNavLink,
         BreezeResponsiveNavLink,
         Link,
+        BellIcon,
     },
 
     data() {
         return {
             showingNavigationDropdown: false,
+            notificationCount: 0
         }
     },
 
@@ -141,9 +156,17 @@ export default {
         if (this.$page.props.auth.user) {
             this.$echo.private('App.Models.User.' + this.$page.props.auth.user.id)
                 .notification((notification) => {
+                    this.notificationCount += 1;
+                    this.$toast.show(notification.message, {
+                        type: 'default',
+                        position: 'top'
+                    });
                     console.log(notification.message);
                 });
         }
+
+        // Close all opened toast after 3000ms
+        setTimeout(this.$toast.clear, 3000)
     },
 
     props: {
