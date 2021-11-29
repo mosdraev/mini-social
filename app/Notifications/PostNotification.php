@@ -77,7 +77,8 @@ class PostNotification extends Notification implements ShouldBroadcast
     public function toDatabase($notifiable)
     {
         return [
-            'message' => substr($this->message, 0, 100) . '...'
+            'message' => substr($this->message, 0, 100) . '...',
+            'reference_id' => $this->reference->id
         ];
     }
 }

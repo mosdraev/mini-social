@@ -14,7 +14,7 @@
                     <div class="flex justify-content items-center">
                         <img src="https://via.placeholder.com/40" class="rounded-full" />
                         <div class="ml-3 text-sm">
-                            <p class="mb-0">{{ $page.props.auth.user.firstname + ' ' + $page.props.auth.user.lastname }}</p>
+                            <p class="mb-0">{{ $page.props.post.byProfileName }}</p>
                             <p class="mb-0">{{ $page.props.post.created_at }}</p>
                         </div>
                     </div>
@@ -49,18 +49,50 @@
                         {{ $page.props.post.content }}
                     </div>
                 </div>
-                <div class="flex flex-row flex flex-row gap-10 py-4">
-                    <span>Likes</span>
-                    <span>Comments</span>
+                <div class="flex flex-row justify-between py-4">
+                    <span v-if="$page.props.post.likes > 0" class="text-sm"><span>{{ $page.props.post.likes }}</span> Likes</span>
+                    <span v-if="$page.props.post.comment.length > 0" class="text-sm"><span>{{ $page.props.post.comment.length }}</span> Comments</span>
                 </div>
-                <div class="bg-clip-padding border-t border-gray-200">
-
-                    <div class="flex justify-between mt-3">
+                <div class="bg-clip-padding border-t border-b border-gray-200">
+                    <div class="flex justify-between my-3">
                         <div class="px-20">
-                            <button type="button">Like</button>
+                            <button
+                                v-if="$page.props.post.likedByCurrentUser !== null && $page.props.post.likedByCurrentUser === $page.props.auth.user.id"
+                                type="button"
+                                class="text-blue-600"
+                                @click="onLikePost($page.props.post.id)">Unlike</button>
+
+                            <button v-else type="button" @click="onLikePost($page.props.post.id)">Like</button>
                         </div>
                         <div class="px-20">
-                            <button type="button">Comment</button>
+                            <button type="button" @click="onDisplayCommentBox($page.props.post.id)">Comment</button>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="displayCommentBox === $page.props.post.id" class="mt-2 mb-4">
+                    <form @submit.prevent>
+                        <Input
+                            :id="`commentBox${$page.props.post.id}`"
+                            type="text"
+                            class="mt-1 block w-full"
+                            name="content"
+                            v-model="createCommentForm.content"
+                            @keyup.enter="createComment($page.props.post.id)"
+                            autofocus />
+                        <InputError class="mt-1" :message="$page.props.errors.content" />
+                    </form>
+                </div>
+                <div class="pb-4">
+                    <div class="flex my-2" v-for="(comment) in $page.props.post.comment" :key="comment.id">
+                        <div class="flex justify-content items-center">
+                            <img src="https://via.placeholder.com/35" class="rounded-full rounded-full mb-auto mt-1" />
+                            <div>
+                                <div class="ml-3 text-sm py-2 px-4 rounded rounded-md bg-gray-100">
+                                    <p class="mb-0">{{ comment.byProfileName }}</p>
+                                    <p>{{ comment.content }}</p>
+                                </div>
+                                <p class="text-xs ml-4 py-2">{{ comment.created_at }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -94,11 +126,32 @@ export default {
     },
 
     data() {
-        return {}
+        return {
+            displayCommentBox: false,
+            createCommentForm: this.$inertia.form({
+                content: ''
+            })
+        }
     },
 
     methods: {
-
+        onDisplayCommentBox(data) {
+            this.displayCommentBox = data
+        },
+        onLikePost(id) {
+            this.$inertia.form().post(this.route('post.like.store', { post: id }), {
+                preserveScroll: true
+            })
+        },
+        createComment(id) {
+            this.createCommentForm.post(this.route('post.comment.store', { post: id }), {
+                preserveScroll: true,
+                onFinish: () => {
+                    this.displayCommentBox = false
+                    this.createCommentForm.content = ''
+                }
+            })
+        },
     }
 }
 </script>

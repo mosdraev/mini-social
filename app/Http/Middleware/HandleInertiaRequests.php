@@ -44,14 +44,14 @@ class HandleInertiaRequests extends Middleware
             $profile = $request->user()->profile->only('firstname', 'lastname');
 
             $authenticated_user = array_merge($user, $profile);
-            $user_notifications = $request->user()->notification;
+            $user_notifications = $request->user()->notification->count();
         }
 
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $authenticated_user,
             ],
-            'notifications' => $user_notifications->count(),
+            'notifications' => $user_notifications,
             'flash' => [
                 'content' => [
                     'message' => fn () => $request->session()->get('message'),

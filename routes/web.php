@@ -36,6 +36,9 @@ Route::group(['middleware' => ['auth', 'verified']], function() {
 
     Route::post('visibility/{post}/{visibility}', [PostController::class, 'updateVisibility'])
         ->name('post.visibility');
+
+    Route::post('showNotifications/{user}', [PostController::class, 'showNotifications'])
+        ->name('post.notification');
 });
 
 require __DIR__.'/auth.php';
