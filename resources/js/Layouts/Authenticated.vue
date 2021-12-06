@@ -16,6 +16,37 @@
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
                             <!-- Settings Dropdown -->
+                            <template v-if="$page.props.auth.user">
+                                <BreezeDropdown align="right" width="96">
+                                    <template #trigger>
+                                        <div v-if="this.notificationCount > 0" class="cursor-pointer z-50 flex" @click="showNotifications">
+                                            <span class="bg-red-600 rounded text-white text-xs z-10 ml-3 mt-2">{{ this.notificationCount }}</span>
+                                            <div class="absolute mt-1">
+                                                <BellIcon />
+                                            </div>
+                                        </div>
+
+                                        <div v-else class="cursor-pointer" @click="showNotifications">
+                                            <div class="mt-1">
+                                                <BellIcon />
+                                            </div>
+                                        </div>
+                                    </template>
+
+                                    <template #content>
+                                        <div class="overflow-y-scroll pt-3 max-h-96 h-auto">
+                                            <div v-if="this.notificationData.length === 0" class="pl-2 pr-1">I am loading notifications...</div>
+                                            <div class="pb-2 px-3" v-else v-for="notification in this.notificationData" :key="notification.id">
+                                                <Link :href="this.route('post.view', { post: notification.data.reference_id })">
+                                                    <p class="cursor-pointer hover:bg-gray-300">
+                                                        {{ notification.data.message }}
+                                                    </p>
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </BreezeDropdown>
+                            </template>
                             <div class="ml-3 relative">
                                 <BreezeDropdown v-if="$page.props.auth.user" align="right" width="48">
                                     <template #trigger>
@@ -115,6 +146,7 @@
 
 <script>
 import BreezeApplicationLogo from '@/Components/ApplicationLogo.vue'
+import BellIcon from '@/Components/BellIcon.vue'
 import BreezeDropdown from '@/Components/Dropdown.vue'
 import BreezeDropdownLink from '@/Components/DropdownLink.vue'
 import BreezeNavLink from '@/Components/NavLink.vue'
@@ -129,12 +161,42 @@ export default {
         BreezeNavLink,
         BreezeResponsiveNavLink,
         Link,
+        BellIcon,
     },
 
     data() {
         return {
             showingNavigationDropdown: false,
+            notificationCount: 0,
+            notificationData: {}
         }
+    },
+
+    methods: {
+        showNotifications() {
+            axios.post(this.route('post.notification', { user: this.$page.props.auth.user.id })).then((response) => {
+                this.notificationData = response.data
+            })
+        }
+    },
+
+    mounted() {
+        if (this.$page.props.auth.user) {
+            this.$echo.private('App.Models.User.' + this.$page.props.auth.user.id)
+                .notification((notification) => {
+                    this.notificationCount += 1;
+                    this.$toast.show(notification.message, {
+                        type: 'default',
+                        position: 'top'
+                    });
+                    console.log(notification.message);
+                });
+        }
+
+        this.notificationCount = this.$page.props.notifications
+
+        // Close all opened toast after 3000ms
+        setTimeout(this.$toast.clear, 3000)
     },
 
     props: {

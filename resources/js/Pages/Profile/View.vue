@@ -169,7 +169,12 @@ export default {
             this.form.mobile_number = mobile_number.value ?? '';
 
             this.form.put(this.route('update.profile', this.$page.props.auth.user.id), {
-                onFinish: () => this.showUpdateForm = false,
+                onFinish: () => {
+                    this.showUpdateForm = false;
+                    this.$toast.success(this.$page.props.flash.content.message, {
+                        position: 'top'
+                    });
+                },
             });
         },
         onFileSelect(event) {
@@ -180,7 +185,12 @@ export default {
             this.formUpload.image = this.selectedImage;
 
             this.formUpload.post(this.route('upload.image', this.$page.props.auth.user.id), {
-                onFinish: () => this.formUpload.image = null
+                onFinish: () => {
+                    this.formUpload.image = null
+                    this.$toast.success(this.$page.props.flash.content.message, {
+                        position: 'top'
+                    });
+                }
             });
         }
     }

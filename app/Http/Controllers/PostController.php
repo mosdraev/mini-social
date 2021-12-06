@@ -7,6 +7,7 @@ use App\Http\Requests\Post\PostRequest;
 use App\Models\Comment;
 use App\Models\Like;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -19,9 +20,14 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $posts = Post::getPosts();
+
+        if ($request->wantsJson())
+        {
+            return $posts;
+        }
 
         return Inertia::render('Post/Index', [
             'posts' => $posts
@@ -87,6 +93,8 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
+        $post = $post->getPosts($post->id);
+
         return Inertia::render('Post/View', [
             'post' => $post
         ]);
@@ -126,6 +134,17 @@ class PostController extends Controller
         $like->likeOrUnlike($request, $post);
 
         return back();
+    }
+
+    /**
+     * Send user notifications of the client-side
+     *
+     * @param User $user
+     * @return json
+     */
+    public function showNotifications(User $user)
+    {
+        return response()->json($user->notification);
     }
 
     /**

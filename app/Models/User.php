@@ -112,6 +112,17 @@ class User extends Authenticatable
      */
     public function like()
     {
-        return $this->hasMany(User::class, 'user_id');
+        return $this->hasMany(Like::class, 'user_id');
+    }
+
+    /**
+     * DB Relational connection from User -> Notification model
+     *
+     * @return object
+     */
+    public function notification()
+    {
+        return $this->morphMany(Notification::class, 'notifiable')
+            ->orderBy('created_at', 'desc');
     }
 }

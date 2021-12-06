@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\PostNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -40,7 +41,19 @@ class Comment extends Model
         $data['user_id'] = Auth::user()->id;
         $data['post_id'] = $post->id;
 
-        return $this->create($data);
+        if ($this->create($data))
+        {
+            $toBeNotified = $post->user;
+            $notifier = Auth::user();
+
+            if ($notifier->id !== $toBeNotified->id)
+            {
+                $notification = new PostNotification(PostNotification::COMMENT_NOTIFICATION, $notifier, $post);
+                $toBeNotified->notify($notification);
+            }
+        }
+
+        return true;
     }
 
     /**

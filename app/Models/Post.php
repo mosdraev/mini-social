@@ -47,16 +47,17 @@ class Post extends Model
     }
 
     /**
-     * Returns all posts with specified queries and filters
+     * Returns all posts with specified queries and filters or
+     * returns only one record when `$id` is passed
      *
      * @return void|array
      */
-    public static function getPosts()
+    public static function getPosts(int $id = 0)
     {
         $current_user = Auth::user();
         $name_condition = "CONCAT_WS(' ', firstname, lastname) AS name";
 
-        return static::addSelect([
+        $query = static::addSelect([
             'likes' => Like::selectRaw('count(*) as total')
                 ->whereColumn('post_id', 'post.id')
         ])
@@ -76,7 +77,16 @@ class Post extends Model
                         ->whereColumn('user_id', 'comment.user_id')
                 ]);
             },
-        ])->orderBy('id', 'DESC')->get()->toArray();
+        ]);
+
+        // Query specific post
+        if (is_numeric($id) && $id > 0)
+        {
+            return $query->where('id', $id)->first()->toArray();
+        }
+
+        // Paginate through all posts
+        return $query->orderBy('id', 'DESC')->cursorPaginate(10)->toArray();
     }
 
     /**
