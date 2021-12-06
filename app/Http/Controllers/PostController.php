@@ -50,7 +50,7 @@ class PostController extends Controller
 
         if ($result)
         {
-            return redirect(route('post.index'))
+            return back()
                 ->with('type', 'alert-success')
                 ->with('message', "Post is now $visibility.");
         }
