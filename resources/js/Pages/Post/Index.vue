@@ -38,7 +38,7 @@
                 </form>
             </div>
         </div>
-        <div v-for="(post) in $page.props.posts" :key="post.id">
+        <div v-for="(post) in userPosts.data" :key="post.id">
             <div class="relative py-3 sm:max-w-4xl sm:mx-auto">
                 <div class="relative px-16 pt-4 bg-white shadow-lg rounded bg-clip-padding bg-opacity-60 border border-gray-200">
                     <div class="pb-3 flex justify-between">
@@ -136,8 +136,14 @@ import Image from '@/Components/Image.vue'
 import EllipsisIcon from '@/Components/EllipsisIcon.vue'
 import Dropdown from '@/Components/Dropdown.vue'
 import DropdownLink from '@/Components/DropdownLink.vue'
+import { debounce } from 'lodash/function'
 
 export default {
+
+    props: {
+        posts: Object
+    },
+
     components: {
         MainLayout,
         Dropdown,
@@ -153,6 +159,7 @@ export default {
 
     data() {
         return {
+            userPosts: this.posts,
             displayCommentBox: false,
             createPostForm: this.$inertia.form({
                 content: '',
@@ -164,7 +171,34 @@ export default {
         }
     },
 
+    mounted() {
+        window.addEventListener('scroll', debounce(this.loadMorePosts, 100));
+    },
+
+    destroyed() {
+        window.removeEventListener("scroll", this.loadMorePosts);
+    },
+
     methods: {
+        loadMorePosts() {
+            let offsetHeight = document.documentElement.offsetHeight,
+                scrollTop = document.documentElement.scrollTop;
+
+            let pixelsFromBottom = offsetHeight - scrollTop - window.innerHeight;
+
+            if (pixelsFromBottom < 200)
+            {
+                if (this.userPosts.next_page_url !== null)
+                {
+                    axios.get(this.userPosts.next_page_url).then(response => {
+                        this.userPosts = {
+                            ...response.data,
+                            data: [...this.userPosts.data, ...response.data.data]
+                        }
+                    });
+                }
+            }
+        },
         onFileSelect() {
             this.createPostForm.image = this.$refs.fileInput.$refs.input.files[0]
         },

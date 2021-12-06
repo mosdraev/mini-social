@@ -85,7 +85,8 @@ class Post extends Model
             return $query->where('id', $id)->first()->toArray();
         }
 
-        return $query->orderBy('id', 'DESC')->get()->toArray();
+        // Paginate through all posts
+        return $query->orderBy('id', 'DESC')->cursorPaginate(10)->toArray();
     }
 
     /**
