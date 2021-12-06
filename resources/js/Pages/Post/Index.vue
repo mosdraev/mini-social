@@ -171,6 +171,10 @@ export default {
         }
     },
 
+    updated() {
+        this.userPosts = this.posts
+    },
+
     mounted() {
         window.addEventListener('scroll', debounce(this.loadMorePosts, 100));
     },
