@@ -124,6 +124,10 @@
                 </div>
             </div>
         </div>
+        <div class="relative py-3 sm:max-w-4xl sm:mx-auto">
+            <p v-show="showPostLoader" class="bg-white p-4 flex justify-center">Loading more posts...</p>
+            <p v-show="showNoMorePosts" class="bg-white p-4 flex justify-center">No more posts to load.</p>
+        </div>
     </MainLayout>
 </template>
 <script>
@@ -159,6 +163,8 @@ export default {
 
     data() {
         return {
+            showPostLoader: false,
+            showNoMorePosts: false,
             userPosts: this.posts,
             displayCommentBox: false,
             createPostForm: this.$inertia.form({
@@ -194,12 +200,21 @@ export default {
             {
                 if (this.userPosts.next_page_url !== null)
                 {
+                    this.showPostLoader = true
+
                     axios.get(this.userPosts.next_page_url).then(response => {
                         this.userPosts = {
                             ...response.data,
                             data: [...this.userPosts.data, ...response.data.data]
                         }
+                    }).error(() => {
+                        this.showPostLoader = false
                     });
+                }
+                else
+                {
+                    this.showPostLoader = false
+                    this.showNoMorePosts = true
                 }
             }
         },
